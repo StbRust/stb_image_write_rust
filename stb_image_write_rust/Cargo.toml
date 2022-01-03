@@ -1,0 +1,8 @@
+[package]
+name = "stb_image_write_rust"
+version = "1.16.0"
+authors = ["StbRust Team"]
+description = "Rust port of the stb_image_write"
+repository = "https://github.com/StbRust/stb_image_write_rust"
+keywords = ["ttf", "image_write"]
+license = "Unlicense"
