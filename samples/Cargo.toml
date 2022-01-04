@@ -2,6 +2,9 @@
 name = "testing"
 version = "0.1.0"
 
+[dependencies]
+stb_image_rust = "2.27.1"
+
 [dependencies.stb_image_write_rust]
 path = "../stb_image_write_rust"
 package = "stb_image_write_rust"
