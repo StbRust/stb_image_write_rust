@@ -1873,8 +1873,8 @@ pub unsafe fn stbi_write_jpg_core(
                         16,
                         ((fdtbl_Y.as_mut_ptr()) as *mut f32),
                         DCY,
-                        stbi_write_jpg_core_YDC_HT,
-                        stbi_write_jpg_core_YAC_HT,
+                        &mut stbi_write_jpg_core_YDC_HT,
+                        &mut stbi_write_jpg_core_YAC_HT,
                     )) as i32);
                     DCY = ((stbiw__jpg_processDU(
                         s,
@@ -1884,8 +1884,8 @@ pub unsafe fn stbi_write_jpg_core(
                         16,
                         ((fdtbl_Y.as_mut_ptr()) as *mut f32),
                         DCY,
-                        stbi_write_jpg_core_YDC_HT,
-                        stbi_write_jpg_core_YAC_HT,
+                        &mut stbi_write_jpg_core_YDC_HT,
+                        &mut stbi_write_jpg_core_YAC_HT,
                     )) as i32);
                     DCY = ((stbiw__jpg_processDU(
                         s,
@@ -1895,8 +1895,8 @@ pub unsafe fn stbi_write_jpg_core(
                         16,
                         ((fdtbl_Y.as_mut_ptr()) as *mut f32),
                         DCY,
-                        stbi_write_jpg_core_YDC_HT,
-                        stbi_write_jpg_core_YAC_HT,
+                        &mut stbi_write_jpg_core_YDC_HT,
+                        &mut stbi_write_jpg_core_YAC_HT,
                     )) as i32);
                     DCY = ((stbiw__jpg_processDU(
                         s,
@@ -1906,8 +1906,8 @@ pub unsafe fn stbi_write_jpg_core(
                         16,
                         ((fdtbl_Y.as_mut_ptr()) as *mut f32),
                         DCY,
-                        stbi_write_jpg_core_YDC_HT,
-                        stbi_write_jpg_core_YAC_HT,
+                        &mut stbi_write_jpg_core_YDC_HT,
+                        &mut stbi_write_jpg_core_YAC_HT,
                     )) as i32);
                     {
                         let mut subU: [f32; 64] = [0.0f32; 64];
@@ -1945,8 +1945,8 @@ pub unsafe fn stbi_write_jpg_core(
                             8,
                             ((fdtbl_UV.as_mut_ptr()) as *mut f32),
                             DCU,
-                            stbi_write_jpg_core_UVDC_HT,
-                            stbi_write_jpg_core_UVAC_HT,
+                            &mut stbi_write_jpg_core_UVDC_HT,
+                            &mut stbi_write_jpg_core_UVAC_HT,
                         )) as i32);
                         DCV = ((stbiw__jpg_processDU(
                             s,
@@ -1956,8 +1956,8 @@ pub unsafe fn stbi_write_jpg_core(
                             8,
                             ((fdtbl_UV.as_mut_ptr()) as *mut f32),
                             DCV,
-                            stbi_write_jpg_core_UVDC_HT,
-                            stbi_write_jpg_core_UVAC_HT,
+                            &mut stbi_write_jpg_core_UVDC_HT,
+                            &mut stbi_write_jpg_core_UVAC_HT,
                         )) as i32);
                     }
                     x += ((16) as i32);
@@ -2008,8 +2008,8 @@ pub unsafe fn stbi_write_jpg_core(
                         8,
                         ((fdtbl_Y.as_mut_ptr()) as *mut f32),
                         DCY,
-                        stbi_write_jpg_core_YDC_HT,
-                        stbi_write_jpg_core_YAC_HT,
+                        &mut stbi_write_jpg_core_YDC_HT,
+                        &mut stbi_write_jpg_core_YAC_HT,
                     )) as i32);
                     DCU = ((stbiw__jpg_processDU(
                         s,
@@ -2019,8 +2019,8 @@ pub unsafe fn stbi_write_jpg_core(
                         8,
                         ((fdtbl_UV.as_mut_ptr()) as *mut f32),
                         DCU,
-                        stbi_write_jpg_core_UVDC_HT,
-                        stbi_write_jpg_core_UVAC_HT,
+                        &mut stbi_write_jpg_core_UVDC_HT,
+                        &mut stbi_write_jpg_core_UVAC_HT,
                     )) as i32);
                     DCV = ((stbiw__jpg_processDU(
                         s,
@@ -2030,8 +2030,8 @@ pub unsafe fn stbi_write_jpg_core(
                         8,
                         ((fdtbl_UV.as_mut_ptr()) as *mut f32),
                         DCV,
-                        stbi_write_jpg_core_UVDC_HT,
-                        stbi_write_jpg_core_UVAC_HT,
+                        &mut stbi_write_jpg_core_UVDC_HT,
+                        &mut stbi_write_jpg_core_UVAC_HT,
                     )) as i32);
                     x += ((8) as i32);
                 }
@@ -3082,7 +3082,7 @@ pub unsafe fn stbiw__encode_png_line(
     }
 }
 
-pub unsafe fn stbiw__jpg_calcBits(mut val: i32, mut bits: [u16; 2]) {
+pub unsafe fn stbiw__jpg_calcBits(mut val: i32, mut bits: &mut [u16; 2]) {
     let mut tmp1: i32 = if val < 0 { -val } else { val };
     val = ((if val < 0 { val - 1 } else { val }) as i32);
     bits[(1) as usize] = ((1) as u16);
@@ -3163,8 +3163,8 @@ pub unsafe fn stbiw__jpg_processDU(
     mut du_stride: i32,
     mut fdtbl: *mut f32,
     mut DC: i32,
-    mut HTDC: [[u16; 2]; 12],
-    mut HTAC: [[u16; 2]; 256],
+    mut HTDC: &mut [[u16; 2]; 12],
+    mut HTAC: &mut [[u16; 2]; 256],
 ) -> i32 {
     let mut EOB: [u16; 2] = [
         HTAC[(0x00) as usize][(0) as usize],
@@ -3235,7 +3235,7 @@ pub unsafe fn stbiw__jpg_processDU(
         stbiw__jpg_writeBits(s, bitBuf, bitCnt, ((HTDC[(0) as usize]).as_mut_ptr()));
     } else {
         let mut bits: [u16; 2] = [0; 2];
-        stbiw__jpg_calcBits(diff, bits);
+        stbiw__jpg_calcBits(diff, &mut bits);
         stbiw__jpg_writeBits(
             s,
             bitBuf,
@@ -3271,7 +3271,7 @@ pub unsafe fn stbiw__jpg_processDU(
             }
             nrzeroes &= ((15) as i32);
         }
-        stbiw__jpg_calcBits(DU[(i) as usize], bits);
+        stbiw__jpg_calcBits(DU[(i) as usize], &mut bits);
         stbiw__jpg_writeBits(
             s,
             bitBuf,

@@ -17,7 +17,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write(&mut self, data: *mut u8, size: i32) {
+    fn write(&mut self, data: *mut u8, size: i32) {
         let mut arr = vec![0; size as usize];
 
         unsafe {
@@ -26,28 +26,45 @@ impl ImageWriter {
         }
     }
 
-    pub unsafe fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
-        stb_image_write_rust::stbi_write_png_to_func(
-            ImageWriter_func,
-            (self as *mut ImageWriter) as *mut u8,
-            x,
-            y,
-            comp,
-            data,
-            x * comp,
-        );
+    pub fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
+        unsafe {
+            stb_image_write_rust::stbi_write_png_to_func(
+                ImageWriter_func,
+                (self as *mut ImageWriter) as *mut u8,
+                x,
+                y,
+                comp,
+                data,
+                x * comp,
+            );
+        }
     }
 
-    pub unsafe fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
-        stb_image_write_rust::stbi_write_jpg_to_func(
-            ImageWriter_func,
-            (self as *mut ImageWriter) as *mut u8,
-            x,
-            y,
-            comp,
-            data,
-            quality,
-        );
+    pub fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
+        unsafe {
+            stb_image_write_rust::stbi_write_jpg_to_func(
+                ImageWriter_func,
+                (self as *mut ImageWriter) as *mut u8,
+                x,
+                y,
+                comp,
+                data,
+                quality,
+            );
+        }
+    }
+
+    pub fn write_bmp(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
+        unsafe {
+            stb_image_write_rust::stbi_write_bmp_to_func(
+                ImageWriter_func,
+                (self as *mut ImageWriter) as *mut u8,
+                x,
+                y,
+                comp,
+                data,
+            );
+        }
     }
 }
 
@@ -82,9 +99,9 @@ fn main() {
         );
 
         // Do something with it
-        let outputPath = r"D:\Temp\CharacterControllerSample2.jpg";
+        let outputPath = r"D:\Temp\CharacterControllerSample2.bmp";
         let mut writer = ImageWriter::new(outputPath);
-        writer.write_jpg(x, y, 4, img, 90);
+        writer.write_bmp(x, y, 4, img, 90);
 
         // Free the allocated memory
         stb_image_rust::c_runtime::free(img);
