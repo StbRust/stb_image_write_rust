@@ -26,7 +26,7 @@ impl ImageWriter {
         }
     }
 
-    unsafe fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
+    pub unsafe fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
         stb_image_write_rust::stbi_write_png_to_func(
             ImageWriter_func,
             (self as *mut ImageWriter) as *mut u8,
@@ -38,7 +38,7 @@ impl ImageWriter {
         );
     }
 
-    unsafe fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
+    pub unsafe fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
         stb_image_write_rust::stbi_write_jpg_to_func(
             ImageWriter_func,
             (self as *mut ImageWriter) as *mut u8,
