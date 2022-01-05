@@ -54,7 +54,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write_bmp(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
+    pub fn write_bmp(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
         unsafe {
             stb_image_write_rust::stbi_write_bmp_to_func(
                 ImageWriter_func,
@@ -99,9 +99,9 @@ fn main() {
         );
 
         // Do something with it
-        let outputPath = r"D:\Temp\CharacterControllerSample2.bmp";
+        let outputPath = r"D:\Temp\CharacterControllerSample2.png";
         let mut writer = ImageWriter::new(outputPath);
-        writer.write_bmp(x, y, 4, img, 90);
+        writer.write_png(x, y, 4, img);
 
         // Free the allocated memory
         stb_image_rust::c_runtime::free(img);

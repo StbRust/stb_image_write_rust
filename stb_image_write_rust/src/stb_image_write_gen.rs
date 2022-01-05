@@ -2525,7 +2525,7 @@ pub unsafe fn stbi_zlib_compress(
         });
         j = ((0) as i32);
         while (j < n) {
-            if (*hlist.offset((j) as isize)) as usize - (data as usize) > ((i - 32768) as usize) {
+            if (*hlist.offset((j) as isize)) as isize - (data as isize) > ((i - 32768) as isize) {
                 let mut d: i32 = ((stbiw__zlib_countm(
                     *hlist.offset((j) as isize),
                     (data).offset((i) as isize),
@@ -2588,7 +2588,7 @@ pub unsafe fn stbi_zlib_compress(
             }) as i32);
             j = ((0) as i32);
             while (j < n) {
-                if (*hlist.offset((j) as isize)) as usize - (data as usize) > ((i - 32767) as usize)
+                if (*hlist.offset((j) as isize)) as isize - (data as isize) > ((i - 32767) as isize)
                 {
                     let mut e: i32 = ((stbiw__zlib_countm(
                         *hlist.offset((j) as isize),
@@ -3548,11 +3548,13 @@ pub unsafe fn stbiw__zlib_flushf(
         } else {
             std::ptr::null_mut()
         });
-        *(data).offset(
-            (c_runtime::postInc(
-                &mut *(((data) as *mut i32).offset(-((2) as isize))).offset((1) as isize),
-            )) as isize,
-        ) = (((*bitbuffer) & ((0xff) as u32)) as u8);
+
+        let value = (((*bitbuffer) & ((0xff) as u32)) as u8);
+        let index = (c_runtime::postInc(
+            &mut *(((data) as *mut i32).offset(-((2) as isize))).offset((1) as isize),
+        )) as isize;
+        *(data).offset(index) = value;
+
         *bitbuffer >>= 8;
         *bitcount -= ((8) as i32);
     }
