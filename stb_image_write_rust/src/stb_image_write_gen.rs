@@ -1533,7 +1533,7 @@ pub unsafe fn stbi_write_bmp_core(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
 ) -> i32 {
     if comp != 4 {
         let mut pad: i32 = (-x * 3) & 3;
@@ -1629,7 +1629,7 @@ pub unsafe fn stbi_write_bmp_to_func(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
 ) -> i32 {
     let mut s: stbi__write_context = stbi__write_context::new(func);
     stbi__start_write_callbacks(((&mut s) as *mut stbi__write_context), context);
@@ -1642,7 +1642,7 @@ pub unsafe fn stbi_write_jpg_core(
     mut width: i32,
     mut height: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
     mut quality: i32,
 ) -> i32 {
     let mut row: i32 = 0;
@@ -1823,9 +1823,9 @@ pub unsafe fn stbi_write_jpg_core(
         let mut bitCnt: i32 = 0;
         let mut ofsG: i32 = if comp > 2 { 1 } else { 0 };
         let mut ofsB: i32 = if comp > 2 { 2 } else { 0 };
-        let mut dataR: *mut u8 = data;
-        let mut dataG: *mut u8 = (dataR).offset((ofsG) as isize);
-        let mut dataB: *mut u8 = (dataR).offset((ofsB) as isize);
+        let mut dataR: *const u8 = data;
+        let mut dataG: *const u8 = (dataR).offset((ofsG) as isize);
+        let mut dataB: *const u8 = (dataR).offset((ofsB) as isize);
         let mut x: i32 = 0;
         let mut y: i32 = 0;
         let mut pos: i32 = 0;
@@ -2056,7 +2056,7 @@ pub unsafe fn stbi_write_jpg_to_func(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
     mut quality: i32,
 ) -> i32 {
     let mut s: stbi__write_context = stbi__write_context::new(func);
@@ -2070,7 +2070,7 @@ pub unsafe fn stbi_write_png_to_func(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
     mut stride_bytes: i32,
 ) -> i32 {
     let mut len: i32 = 0;
@@ -2085,7 +2085,7 @@ pub unsafe fn stbi_write_png_to_func(
 }
 
 pub unsafe fn stbi_write_png_to_mem(
-    mut pixels: *mut u8,
+    mut pixels: *const u8,
     mut stride_bytes: i32,
     mut x: i32,
     mut y: i32,
@@ -2276,7 +2276,7 @@ pub unsafe fn stbi_write_tga_core(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
 ) -> i32 {
     let mut has_alpha: i32 = if comp == 2 || comp == 4 { 1 } else { 0 };
     let mut colorbytes: i32 = if (has_alpha) != 0 { comp - 1 } else { comp };
@@ -2346,11 +2346,11 @@ pub unsafe fn stbi_write_tga_core(
             jdir = ((-1) as i32);
         };
         while (j != jend) {
-            let mut row: *mut u8 = (data).offset((j * x * comp) as isize);
+            let mut row: *const u8 = (data).offset((j * x * comp) as isize);
             let mut len: i32 = 0;
             i = ((0) as i32);
             while (i < x) {
-                let mut begin: *mut u8 = (row).offset((i * comp) as isize);
+                let mut begin: *const u8 = (row).offset((i * comp) as isize);
                 let mut diff: i32 = 1;
                 len = ((1) as i32);
                 if i < x - 1 {
@@ -2361,7 +2361,7 @@ pub unsafe fn stbi_write_tga_core(
                         ((comp) as u64),
                     )) as i32);
                     if (diff) != 0 {
-                        let mut prev: *mut u8 = begin;
+                        let mut prev: *const u8 = begin;
                         k = ((i + 2) as i32);
                         while (k < x && len < 128) {
                             if (c_runtime::memcmp(
@@ -2430,7 +2430,7 @@ pub unsafe fn stbi_write_tga_to_func(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
 ) -> i32 {
     let mut s: stbi__write_context = stbi__write_context::new(func);
     stbi__start_write_callbacks(((&mut s) as *mut stbi__write_context), context);
@@ -2439,7 +2439,7 @@ pub unsafe fn stbi_write_tga_to_func(
 }
 
 pub unsafe fn stbi_zlib_compress(
-    mut data: *mut u8,
+    mut data: *const u8,
     mut data_len: i32,
     mut out_len: *mut i32,
     mut quality: i32,
@@ -2449,9 +2449,9 @@ pub unsafe fn stbi_zlib_compress(
     let mut j: i32 = 0;
     let mut bitcount: i32 = 0;
     let mut out: *mut u8 = std::ptr::null_mut();
-    let mut hash_table: *mut *mut *mut u8 =
+    let mut hash_table: *mut *mut *const u8 =
         ((c_runtime::malloc(((16384) as u64) * std::mem::size_of::<*mut *mut u8>() as u64))
-            as *mut *mut *mut u8);
+            as *mut *mut *const u8);
     if hash_table == std::ptr::null_mut() {
         return std::ptr::null_mut();
     }
@@ -2516,8 +2516,8 @@ pub unsafe fn stbi_zlib_compress(
         let mut h: i32 =
             ((stbiw__zhash((data).offset((i) as isize)) & ((16384 - 1) as u32)) as i32);
         let mut best: i32 = 3;
-        let mut bestloc: *mut u8 = ((std::ptr::null_mut()) as *mut u8);
-        let mut hlist: *mut *mut u8 = *hash_table.offset((h) as isize);
+        let mut bestloc: *const u8 = ((std::ptr::null_mut()) as *mut u8);
+        let mut hlist: *mut *const u8 = *hash_table.offset((h) as isize);
         let mut n: i32 = (if (hlist) != std::ptr::null_mut() {
             *((((hlist) as *mut u8) as *mut i32).offset(-((2) as isize))).offset((1) as isize)
         } else {
@@ -2553,7 +2553,7 @@ pub unsafe fn stbi_zlib_compress(
                 .offset(-((2) as isize)))
             .offset((1) as isize) = ((quality) as i32);
         }
-        (if ((*hash_table.offset((h) as isize)) == ((std::ptr::null_mut()) as *mut *mut u8)
+        (if ((*hash_table.offset((h) as isize)) == std::ptr::null_mut()
             || *((((*hash_table.offset((h) as isize)) as *mut u8) as *mut i32)
                 .offset(-((2) as isize)))
             .offset((1) as isize)
@@ -2971,7 +2971,7 @@ pub unsafe fn stbiw__crc32(mut buffer: *mut u8, mut len: i32) -> u32 {
 }
 
 pub unsafe fn stbiw__encode_png_line(
-    mut pixels: *mut u8,
+    mut pixels: *const u8,
     mut stride_bytes: i32,
     mut width: i32,
     mut height: i32,
@@ -2987,7 +2987,7 @@ pub unsafe fn stbiw__encode_png_line(
     };
     let mut i: i32 = 0;
     let mut _type_: i32 = *mymap.offset((filter_type) as isize);
-    let mut z: *mut u8 = (pixels).offset(
+    let mut z: *const u8 = (pixels).offset(
         (stride_bytes
             * (if (stbi__flip_vertically_on_write) != 0 {
                 height - 1 - y
@@ -3382,7 +3382,7 @@ pub unsafe fn stbiw__write_pixel(
     mut comp: i32,
     mut write_alpha: i32,
     mut expand_mono: i32,
-    mut d: *mut u8,
+    mut d: *const u8,
 ) {
     let mut bg: [u8; 3] = [((255) as u8), ((0) as u8), ((255) as u8)];
     let mut px: [u8; 3] = [0; 3];
@@ -3438,7 +3438,7 @@ pub unsafe fn stbiw__write_pixels(
     mut x: i32,
     mut y: i32,
     mut comp: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
     mut write_alpha: i32,
     mut scanline_pad: i32,
     mut expand_mono: i32,
@@ -3463,7 +3463,7 @@ pub unsafe fn stbiw__write_pixels(
     while (j != j_end) {
         i = ((0) as i32);
         while (i < x) {
-            let mut d: *mut u8 = (data).offset(((j * x + i) * comp) as isize);
+            let mut d: *const u8 = (data).offset(((j * x + i) * comp) as isize);
             stbiw__write_pixel(s, rgb_dir, comp, write_alpha, expand_mono, d);
             c_runtime::preInc(&mut i);
         }
@@ -3496,7 +3496,7 @@ pub unsafe fn stbiw__write3(mut s: *mut stbi__write_context, mut a: u8, mut b: u
     (*s).buffer[(n + 2) as usize] = ((c) as u8);
 }
 
-pub unsafe fn stbiw__zhash(mut data: *mut u8) -> u32 {
+pub unsafe fn stbiw__zhash(mut data: *const u8) -> u32 {
     let mut hash: u32 = ((((*data.offset((0) as isize)) as i32)
         + (((*data.offset((1) as isize)) as i32) << 8)
         + (((*data.offset((2) as isize)) as i32) << 16)) as u32);
@@ -3518,7 +3518,7 @@ pub unsafe fn stbiw__zlib_bitrev(mut code: i32, mut codebits: i32) -> i32 {
     return ((res) as i32);
 }
 
-pub unsafe fn stbiw__zlib_countm(mut a: *mut u8, mut b: *mut u8, mut limit: i32) -> u32 {
+pub unsafe fn stbiw__zlib_countm(mut a: *const u8, mut b: *const u8, mut limit: i32) -> u32 {
     let mut i: i32 = 0;
     i = ((0) as i32);
     while (i < limit && i < 258) {

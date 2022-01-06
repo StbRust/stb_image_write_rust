@@ -44,7 +44,7 @@ pub unsafe fn stbiw__outfile(
     mut y: i32,
     mut comp: i32,
     mut expand_mono: i32,
-    mut data: *mut u8,
+    mut data: *const u8,
     mut alpha: i32,
     mut pad: i32,
     mut fmt: &str,

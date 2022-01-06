@@ -22,7 +22,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
+    pub fn write_png(&mut self, x: i32, y: i32, comp: i32, data: *const u8) {
         unsafe {
             stbi_write_png_to_func(
                 ImageWriter_func,
@@ -36,7 +36,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *mut u8, quality: i32) {
+    pub fn write_jpg(&mut self, x: i32, y: i32, comp: i32, data: *const u8, quality: i32) {
         unsafe {
             stbi_write_jpg_to_func(
                 ImageWriter_func,
@@ -50,7 +50,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write_bmp(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
+    pub fn write_bmp(&mut self, x: i32, y: i32, comp: i32, data: *const u8) {
         unsafe {
             stbi_write_bmp_to_func(
                 ImageWriter_func,
@@ -63,7 +63,7 @@ impl ImageWriter {
         }
     }
 
-    pub fn write_tga(&mut self, x: i32, y: i32, comp: i32, data: *mut u8) {
+    pub fn write_tga(&mut self, x: i32, y: i32, comp: i32, data: *const u8) {
         unsafe {
             stbi_write_tga_to_func(
                 ImageWriter_func,

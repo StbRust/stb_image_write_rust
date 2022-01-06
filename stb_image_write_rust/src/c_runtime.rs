@@ -74,7 +74,7 @@ pub unsafe fn postDecPtr<T>(mut a: *mut *mut T) -> *mut T {
     return result;
 }
 
-pub unsafe fn memcpy(src: *mut u8, dest: *mut u8, count: u64) {
+pub unsafe fn memcpy(src: *mut u8, dest: *const u8, count: u64) {
     std::ptr::copy_nonoverlapping(dest, src, count as usize);
 }
 
@@ -162,7 +162,7 @@ pub unsafe fn memmove(a: *mut u8, b: *mut u8, size: u64) {
     memcpy(a, temp, size);
 }
 
-pub unsafe fn memcmp(a: *mut u8, b: *mut u8, size: u64) -> i32 {
+pub unsafe fn memcmp(a: *const u8, b: *const u8, size: u64) -> i32 {
     let mut result = 0;
     let mut ap = a;
     let mut bp = b;
